@@ -21,7 +21,7 @@ final readonly class MessengerSenders implements SendersLocatorInterface
         $messengerSettings = $this->settings->get('messenger');
 
         return [
-            'async' => $this->createAsyncSender($messengerSettings['transports']['async']),
+            'async_commands' => $this->createAsyncSender($messengerSettings['transports']['async_commands']),
         ];
     }
 

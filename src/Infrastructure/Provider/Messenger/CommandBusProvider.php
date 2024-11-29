@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Provider;
+namespace App\Infrastructure\Provider\Messenger;
 
 use App\Application\Command\ConfirmReservationCommand;
 use App\Application\Command\ConfirmReservationHandler;
@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 
-final readonly class CommandBus
+final readonly class CommandBusProvider
 {
     public const ASYNC = 'async.command.bus';
     public const SYNC = 'sync.command.bus';
@@ -25,10 +25,10 @@ final readonly class CommandBus
         $containerBuilder->addDefinitions([
             'async.command.bus' => function (ContainerInterface $container) {
                 $handlersLocator = new HandlersLocator($container->get('command.handlers'));
-                $sendersLocator = $container->get(BusTransports::ASYNC_MESSAGES_SENDERS);
+                $senders = $container->get(SendersProviders::ASYNC_MESSAGES_SENDERS);
 
                 return new MessageBus([
-                    new SendMessageMiddleware($sendersLocator),
+                    new SendMessageMiddleware($senders),
                     new HandleMessageMiddleware($handlersLocator),
                 ]);
             },

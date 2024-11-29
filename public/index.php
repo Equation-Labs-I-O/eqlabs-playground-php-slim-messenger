@@ -34,8 +34,8 @@ $repositories($containerBuilder);
 
 
 // Set up Buses
-$buses = require __DIR__ . '/../app/buses.php';
-$buses($containerBuilder);
+$messenger = require __DIR__ . '/../app/messenger.php';
+$messenger($containerBuilder);
 
 // Set up controllers
 $controllers = require __DIR__ . '/../app/controllers.php';

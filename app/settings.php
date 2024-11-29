@@ -23,25 +23,28 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 'messenger' => [
                     'transports' => [
-                        'async' => [
+                        'async_commands' => [
                             'dsn' => getenv('RABBITMQ_COMMANDS_DSN'),
                             'options' => [
                                 'exchange' => [
-                                    'name' => 'async.messages.exchange',
+                                    'name' => 'commands.exchange',
                                 ],
                                 'queues' => [
-                                    'async.messages.exchange' => 'async.messages.queue',
-                                ],
-                                'retry' => [
-                                    'delay' => 1000,
-                                    'multiplier' => 2,
-                                    'max' => 10000,
+                                    'commands.queue' => [
+                                        'binding_keys' => [ 'async.commands' ],
+                                    ],
                                 ],
                             ],
                         ],
                         'sync' => [
                             'dsn' => 'sync://',
                         ],
+                    ],
+                    'retry_strategy' => [
+                        'max_retries' => 3,
+                        'delay' => 1000,
+                        'multiplier' => 2,
+                        'max_delay' => 0,
                     ],
                 ],
             ]);

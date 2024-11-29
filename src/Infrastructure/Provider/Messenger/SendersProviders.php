@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Provider;
+namespace App\Infrastructure\Provider\Messenger;
 
 use App\Infrastructure\Messenger\MessengerSenders;
 use App\Infrastructure\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpSender;
-use Symfony\Component\Messenger\Bridge\Amqp\Transport\Connection;
-use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
 
-final readonly class BusTransports
+final readonly class SendersProviders
 {
     public const ASYNC_MESSAGES_SENDERS = 'messenger.senders';
 
@@ -23,7 +20,7 @@ final readonly class BusTransports
         $containerBuilder->addDefinitions([
             self::ASYNC_MESSAGES_SENDERS => function (ContainerInterface $container): SendersLocatorInterface {
                 return new MessengerSenders($container->get(SettingsInterface::class));
-            }
+            },
         ]);
     }
 }
