@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
 
 final readonly class SendersProviders
 {
-    public const ASYNC_MESSAGES_SENDERS = 'messenger.senders';
+    public const ASYNC_MESSAGES_SENDERS = 'messenger.async.senders';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {

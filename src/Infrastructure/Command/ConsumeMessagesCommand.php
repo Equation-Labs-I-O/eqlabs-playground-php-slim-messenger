@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ExampleCommand extends Command
+final class ConsumeMessagesCommand extends Command
 {
 
 
@@ -23,6 +23,8 @@ final class ExampleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Hello, world!');
+
+        \Symfony\Component\Messenger\Command\ConsumeMessagesCommand::
 
         return Command::SUCCESS;
     }

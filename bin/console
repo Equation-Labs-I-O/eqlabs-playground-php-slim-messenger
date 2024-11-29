@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Command\ExampleCommand;
+use App\Infrastructure\Command\ConsumeMessagesCommand;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
@@ -30,7 +30,7 @@ try {
     $lazyLoaderCommands = new ContainerCommandLoader(
         $container,
         [
-            'reservation:fulfill' => ExampleCommand::class
+            'reservation:fulfill' => ConsumeMessagesCommand::class
         ]
     );
 

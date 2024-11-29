@@ -23,24 +23,21 @@ make stop
 
 
 ## Notes
-- src/Infrastructure/MessageBus/CommandBus.php: `CommandBus` with an async transport configuration.
-- src/Infrastructure/MessageBus/QueryBus.php: `QueryBus` with an sync transport configuration.
-- src/Infrastructure/MessageBus/EventBus.php: `EvenBus` with an async transport configuration for DomainEvents for example.
-- src/Infrastructure/MessageBus/BusTransport.php: Configuration for the async transport.
-- src/Application/Command/ : Folder with all the commands.
-- src/Application/Query/ : Folder with all the queries.
-- app/settings : To know all the settings you could tweak with the `symfony/messenger` component.
+- `src/Infrastructure/Provider/Messenger`: This folder holds all the classes used to configure the component inside the SLIM app.
+- `src/Application/Command/` : Folder with all the commands.
+- `src/Application/Query/` : Folder with all the queries.
+- `app/settings` : To know all the settings you could tweak with the `symfony/messenger` component.
 
 > symfony/messenger comes with a bundle consumer inside the library so we don't have to write any consumer for the async transport.
 > to run the consumer 
 
 ## Sequence Diagram
 
-`async` transport works as `"Fire and Forget"`, so the handler will dispatch the command and return immediately.
+`async` bus aka `"Fire and Forget"`: The bus will dispatch the message (`command` or `event`) and return immediately.
 
-`sync` transport works as `"Wait and Return"`, so the handler will dispatch the command and wait for the response (normally query handling is always sync).
+`sync` bus aka `"Wait and Return"`: The bus will dispatch the message (`query` or `command`) and wait for the response.
 
-`bin/console messenger:consume async --time-limit=3600 --memory-limit=128M` to run the async consumer (already bundle inside the symfony?messenger library).
+`consumer` aka (worker): to run the async consumer execute `bin/console messenger:consume async --time-limit=3600 --memory-limit=128M` on the terminal.
 
 
 ```plantuml
