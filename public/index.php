@@ -15,10 +15,6 @@ require __DIR__ . '/../vendor/autoload.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-if (false) { // Should be set to true in production
-	$containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
-}
-
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
@@ -26,16 +22,6 @@ $settings($containerBuilder);
 // Set up dependencies
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
-
-// Set up repositories
-$repositories = require __DIR__ . '/../app/repositories.php';
-$repositories($containerBuilder);
-
-
-
-// Set up Buses
-$messenger = require __DIR__ . '/../app/messenger.php';
-$messenger($containerBuilder);
 
 // Set up controllers
 $controllers = require __DIR__ . '/../app/controllers.php';

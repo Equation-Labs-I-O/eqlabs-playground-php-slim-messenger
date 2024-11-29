@@ -2,29 +2,19 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Provider\ControllersProvider;
+use App\Infrastructure\Provider\LoggerProvider;
+use App\Infrastructure\Provider\Messenger\CommandBusProvider;
+use App\Infrastructure\Provider\Messenger\QueryBusProvider;
+use App\Infrastructure\Provider\Messenger\SendersProviders;
 use DI\ContainerBuilder;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Monolog\Processor\UidProcessor;
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use App\Infrastructure\Settings\SettingsInterface;
 
 return function (ContainerBuilder $containerBuilder) {
-    $containerBuilder->addDefinitions([
-        LoggerInterface::class => function (ContainerInterface $c) {
-            $settings = $c->get(SettingsInterface::class);
+    LoggerProvider::load($containerBuilder);
+    ControllersProvider::load($containerBuilder);
 
-            $loggerSettings = $settings->get('logger');
-            $logger = new Logger($loggerSettings['name']);
-
-            $processor = new UidProcessor();
-            $logger->pushProcessor($processor);
-
-            $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
-            $logger->pushHandler($handler);
-
-            return $logger;
-        },
-    ]);
+    // Messenger bus configuration
+    SendersProviders::load($containerBuilder);
+    CommandBusProvider::load($containerBuilder);
+    QueryBusProvider::load($containerBuilder);
 };
