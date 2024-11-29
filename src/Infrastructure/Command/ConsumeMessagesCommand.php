@@ -10,13 +10,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ConsumeMessagesCommand extends Command
 {
-
+    public function __construct(?string $name = null)
+    {
+        parent::__construct($name);
+    }
 
     protected function configure(): void
     {
-        $this
-            ->setName('reservation:fulfill')
-            ->setDescription('Fulfill a reservation')
+        $this->setName('messenger:consume')
+            ->setDescription('Consume messages from the queue')
             ->setHelp('This command is an example');
     }
 
@@ -24,7 +26,6 @@ final class ConsumeMessagesCommand extends Command
     {
         $output->writeln('Hello, world!');
 
-        \Symfony\Component\Messenger\Command\ConsumeMessagesCommand::
 
         return Command::SUCCESS;
     }
