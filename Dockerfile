@@ -4,7 +4,7 @@ COPY --from=mlocati/php-extension-installer:2.6.4 /usr/bin/install-php-extension
 COPY --from=composer/composer:2.8.2-bin /composer /usr/bin/composer
 
 # Install PHP extensions
-RUN install-php-extensions pdo_mysql zip amqp opcache apcu http sockets
+RUN install-php-extensions pdo_mysql zip amqp opcache apcu http sockets pcntl
 
 # Set the working directory
 WORKDIR /app
