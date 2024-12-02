@@ -46,9 +46,9 @@ make run CMD="bin/console messenger:consume --bus=async.command.bus --time-limit
 
 ## Sequence Diagram
 
-`async` bus aka `"Fire and Forget"`: The bus will dispatch the message (`command` or `event`) and return immediately.
+`async` bus aka `"Fire and Forget"`: The bus will dispatch the message and return immediately.
 
-`sync` bus aka `"Wait and Return"`: The bus will dispatch the message (`query` or `command`) and wait for the response.
+`sync` bus aka `"Wait and Return"`: The bus will dispatch the message and wait for the response.
 
 
 ```plantuml
