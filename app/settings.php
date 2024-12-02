@@ -21,10 +21,13 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => 'php://stdout',
                     'level' => Logger::DEBUG,
                 ],
+                'database' => [
+                    'dsn' => getenv('MYSQL_DSN'),
+                ],
                 'messenger' => [
                     'transports' => [
-                        'async_commands' => [
-                            'dsn' => getenv('RABBITMQ_COMMANDS_DSN'),
+                        'async_transport' => [
+                            'dsn' => getenv('RABBITMQ_TRANSPORT_DSN'),
                             'options' => [
                                 'exchange' => [
                                     'name' => 'commands.exchange',
@@ -35,16 +38,16 @@ return function (ContainerBuilder $containerBuilder) {
                                     ],
                                 ],
                             ],
+                            'retry_strategy' => [
+                                'max_retries' => 3,
+                                'delay' => 1000,
+                                'multiplier' => 2,
+                                'max_delay' => 0,
+                            ]
                         ],
-                        'sync' => [
-                            'dsn' => 'sync://',
-                        ],
-                    ],
-                    'retry_strategy' => [
-                        'max_retries' => 3,
-                        'delay' => 1000,
-                        'multiplier' => 2,
-                        'max_delay' => 0,
+                        'async_failure_transport' => [
+                            'dsn' => 'doctrine://default',
+                        ]
                     ],
                 ],
             ]);

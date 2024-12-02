@@ -3,11 +3,13 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Command\ConsumeMessagesCommand;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
+use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
 
 if ('cli' !== PHP_SAPI) {
     die('This is only accessible through console.');
@@ -15,11 +17,19 @@ if ('cli' !== PHP_SAPI) {
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$containerBuilder = new ContainerBuilder();
-
 try {
+    $containerBuilder = new ContainerBuilder();
+
+    // Set up settings
+    $settings = require __DIR__ . '/../app/settings.php';
+    $settings($containerBuilder);
+
+    // Set up dependencies
+    $dependencies = require __DIR__ . '/../app/dependencies.php';
+    $dependencies($containerBuilder);
+
     /** @var ContainerInterface $container */
-    $container = (new ContainerBuilder())->build();
+    $container = $containerBuilder->build();
 
     /** @var Application $application */
     $application = $container->get(Application::class);
@@ -28,7 +38,9 @@ try {
     $lazyLoaderCommands = new ContainerCommandLoader(
         $container,
         [
-            'messenger:consume' => ConsumeMessagesCommand::class
+            ConsumeMessagesCommand::getDefaultName() => ConsumeMessagesCommand::class,
+            FailedMessagesShowCommand::getDefaultName() => FailedMessagesShowCommand::class,
+            FailedMessagesRemoveCommand::getDefaultName() => FailedMessagesRemoveCommand::class,
         ]
     );
 

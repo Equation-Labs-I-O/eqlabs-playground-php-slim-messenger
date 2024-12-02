@@ -23,10 +23,6 @@ $settings($containerBuilder);
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
 
-// Set up controllers
-$controllers = require __DIR__ . '/../app/controllers.php';
-$controllers($containerBuilder);
-
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
 
@@ -34,10 +30,6 @@ $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $callableResolver = $app->getCallableResolver();
-
-// Register middleware
-$middleware = require __DIR__ . '/../app/middleware.php';
-$middleware($app);
 
 // Register routes
 $routes = require __DIR__ . '/../app/routes.php';
