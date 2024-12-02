@@ -75,11 +75,11 @@ command_bus --> queue: push(Command)
 queue <-- consumer: consume(Command)
 consumer --> command_handler: handles(Command)
 alt $onFailure->shouldRetry()
-  command_handler --> queue: push(Command)
+  consumer --> queue: push(Command)
   queue <-- consumer: consume(Command)
   consumer --> command_handler: handles(Command)
 else retries are exhausted
-  command_handler -> db: persist(Command)
+  consumer --> db: persist(Command)
 end
 deactivate use_case
 note right of controller
