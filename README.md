@@ -62,8 +62,8 @@ activate use_case #lightblue
 command_bus --> queue: push(Command)
 queue <-- consumer: consume(Command)
 consumer --> command_handler: handles(Command)
-alt $command->shouldRetry()
-  command_handler -> queue: push(Command)
+alt $onFailure->shouldRetry()
+  command_handler --> queue: push(Command)
   queue <-- consumer: consume(Command)
   consumer --> command_handler: handles(Command)
 else retries are exhausted
