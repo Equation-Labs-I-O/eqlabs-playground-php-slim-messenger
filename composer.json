@@ -24,12 +24,14 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
+        "ext-pdo": "*",
         "monolog/monolog": "^2.8",
         "php-di/php-di": "^6.4",
         "slim/psr7": "^1.5",
         "slim/slim": "^4.10",
         "symfony/amqp-messenger": "^7.1",
         "symfony/console": "^7.1",
+        "symfony/doctrine-messenger": "^7.2",
         "symfony/event-dispatcher": "^7.1",
         "symfony/messenger": "^7.1"
     },
