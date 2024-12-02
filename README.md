@@ -1,26 +1,36 @@
 # slim and symfony/messenger for sync and async messages handling
 
-This is a simple example of how to use `slim` and `symfony/messenger` together to be used as `sandbox` for all team to play and understand how to work with `slim` and `symfony/messenger`. More details on the Sequence Diagram below
+This is a simple example of how to use `slim` and `symfony/messenger` together to be used as `sandbox` for all team to play and understand how to work with `slim` and `symfony/messenger`. 
+
+More details on the Sequence Diagram below
 
 > A `command` or `query` can be dispatched to any bus (sync and async) so you can decide the behaviour depending on your use case flow.
 
 ## Requirements
 - Docker and Docker Compose
-- GNU bash 
 - GNU Make
 
 ## Usage
+### Make Targets
 To start the project you need to run the following commands:
 
 ```sh
 make build
 make start
 make follow-logs # to see the logs 
-make consume  # run the symfony/messenger consumer 'bin/console messenger:consume async'
 make stop
 ```
-> You will have the rabbitmq administration interface available at `http://0.0.0.0:15672` with the following credentials `user:password`.
+You have the `rabbitmq` administration interface available at `http://0.0.0.0:15672` with the following credentials `user:password`.
 
+### Console Commands
+The symfony messenger commands are available to be used as well in the slim app:
+
+```sh
+bin/console messenger:consume {transport} --time-limit={s} --memory-limit={mb} --limit={quantity} # to consume the async messages
+bin/console debug:messenger # show the messages you can dispatch using the message bus
+... # and more commands
+```
+> For more details about the commands you can check the [symfony messenger documentation](https://symfony.com/doc/current/messenger.html)
 
 ## Notes
 - `src/Infrastructure/Provider/Messenger`: This folder holds all the classes used to configure the component inside the SLIM app.
@@ -36,8 +46,6 @@ make stop
 `async` bus aka `"Fire and Forget"`: The bus will dispatch the message (`command` or `event`) and return immediately.
 
 `sync` bus aka `"Wait and Return"`: The bus will dispatch the message (`query` or `command`) and wait for the response.
-
-`consumer` aka (worker): to run the async consumer execute `bin/console messenger:consume async --time-limit=3600 --memory-limit=128M` on the terminal.
 
 
 ```plantuml
