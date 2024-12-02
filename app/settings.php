@@ -47,6 +47,9 @@ return function (ContainerBuilder $containerBuilder) {
                         ],
                         'async_failure_transport' => [
                             'dsn' => 'doctrine://default',
+                            'options' => [
+                                'table_name' => 'async_commands_failed_messages',
+                            ],
                         ]
                     ],
                 ],

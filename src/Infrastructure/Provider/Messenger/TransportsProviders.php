@@ -10,44 +10,45 @@ use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpReceiver;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpSender;
+use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransport;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection as DoctrineConnection;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 
 final readonly class TransportsProviders
 {
-    public const ASYNC_SENDER_TRANSPORT = 'messenger.async.sender.transport';
-    public const ASYNC_RECEIVER_TRANSPORT = 'messenger.async.receiver.transport';
     public const ASYNC_SENDER_LOCATOR_CONFIGURATION = 'messenger.sender.locator.configuration';
     public const ASYNC_FAILURE_TRANSPORT = 'messenger.async.failure.transport';
+    public const ASYNC_TRANSPORT = 'messenger.async.transport';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
             self::ASYNC_SENDER_LOCATOR_CONFIGURATION => function (ContainerInterface $container): array {
                 return [
-                   [ '*' =>  [ self::ASYNC_SENDER_TRANSPORT ]],
+                   [ '*' =>  [ self::ASYNC_TRANSPORT ]],
                     $container
                 ];
             },
-            self::ASYNC_SENDER_TRANSPORT => function (ContainerInterface $container): SenderInterface {
+            self::ASYNC_TRANSPORT => function (ContainerInterface $container): TransportInterface {
                 $settings = $container->get(SettingsInterface::class);
                 $amqpSettings = $settings->get('messenger')['transports']['async_transport'];
 
-                return new AmqpSender(Connection::fromDsn($amqpSettings['dsn'], $amqpSettings['options']), new PhpSerializer());
+                return new AmqpTransport(
+                    Connection::fromDsn($amqpSettings['dsn'], $amqpSettings['options']),
+                    new PhpSerializer()
+                );
             },
-            self::ASYNC_RECEIVER_TRANSPORT => function (ContainerInterface $container): ReceiverInterface {
+            self::ASYNC_FAILURE_TRANSPORT => function (ContainerInterface $container): TransportInterface {
                 $settings = $container->get(SettingsInterface::class);
-                $amqpSettings = $settings->get('messenger')['transports']['async_transport'];
+                $doctrineSettings = $settings->get('messenger')['transports']['async_failure_transport'];
 
-                return new AmqpReceiver(Connection::fromDsn($amqpSettings['dsn'], $amqpSettings['options']), new PhpSerializer());
-            },
-            self::ASYNC_FAILURE_TRANSPORT => function (ContainerInterface $container) {
                 return new DoctrineTransport(
-                    new DoctrineConnection([], $container->get(DatabaseProvider::MAIN_CONNECTION)),
+                    new DoctrineConnection($doctrineSettings['options'], $container->get(DatabaseProvider::MAIN_CONNECTION)),
                     new PhpSerializer()
                 );
             }

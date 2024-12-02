@@ -31,7 +31,7 @@ final readonly class ConsoleCommandsProvider
                     $container->get(EventDispatcherInterface::class),
                     $container->get(LoggerInterface::class),
                     [
-                        TransportsProviders::ASYNC_RECEIVER_TRANSPORT,
+                        TransportsProviders::ASYNC_TRANSPORT,
                     ]
                 );
             },
@@ -39,8 +39,8 @@ final readonly class ConsoleCommandsProvider
                 return new FailedMessagesRetryCommand(
                     TransportsProviders::ASYNC_FAILURE_TRANSPORT,
                     $container->get(self::FAILURE_TRANSPORTS_SERVICE_PROVIDER),
+                    'messenger:failed:retry',
                     $container->get(EventDispatcherInterface::class),
-                    new EventDispatcher(),
                     $container->get(LoggerInterface::class),
                 );
             },
