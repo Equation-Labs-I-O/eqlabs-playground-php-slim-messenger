@@ -16,7 +16,7 @@ final readonly class QueryCommandUseCase
     public function __construct(
         private LoggerInterface $logger,
         private MessageBusInterface $asyncCommandBus,
-        private MessageBusInterface $syncCommandBus,
+        private MessageBusInterface $commandBus,
         private MessageBusInterface $queryBus
     ) {
     }
@@ -31,7 +31,7 @@ final readonly class QueryCommandUseCase
         // async bus
         $this->asyncCommandBus->dispatch(new CreatePendingReservationCommand($id));
         // sync bus
-        $this->syncCommandBus->dispatch(new ConfirmReservationCommand($id));
+        $this->commandBus->dispatch(new ConfirmReservationCommand($id));
 
         $this->logger->info('Use case has been executed successfully!');
     }

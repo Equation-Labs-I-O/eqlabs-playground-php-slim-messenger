@@ -16,7 +16,13 @@ final readonly class CreatePendingReservationHandler
 
     public function __invoke(CreatePendingReservationCommand $command): void
     {
-        sleep(5);
-        $this->logger->info('create reservation in pending status was handled successfully');
+        sleep(1);
+
+        $this->logger->info(
+            sprintf(
+                'This command was handled with an ASYNC bus at %s',
+                (new \DateTime())->format('Y-m-d H:i:s')
+            )
+        );
     }
 }

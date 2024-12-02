@@ -14,19 +14,20 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 final readonly class QueryBusProvider
 {
     public const SYNC = 'query.bus';
+    public const HANDLERS_MAP = 'query.handlers';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
-            'query.bus' => function (ContainerInterface $container) {
-                $handlers = $container->get('query.handlers');
+            self::SYNC => function (ContainerInterface $container) {
+                $handlers = $container->get(self::HANDLERS_MAP);
                 $handlersLocator = new HandlersLocator($handlers);
 
                 return new MessageBus([
                     new HandleMessageMiddleware($handlersLocator),
                 ]);
             },
-            'query.handlers' => function (ContainerInterface $container) {
+            self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
                     GetReservationByIdQuery::class => [$container->get(GetReservationByIdHandler::class)],
                 ];
