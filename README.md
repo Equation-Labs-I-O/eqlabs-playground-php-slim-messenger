@@ -2,9 +2,10 @@
 
 This is a simple example of how to use `slim` and `symfony/messenger` together to be used as `sandbox` for all team to play and understand how to work with `slim` and `symfony/messenger`. 
 
-More details on the Sequence Diagram below
+A `command`, `query` or `event`, can be dispatched to any bus (`sync` and `async`) so you can decide the behaviour depending on your use case flow.
 
-> A `command` or `query` can be dispatched to any bus (sync and async) so you can decide the behaviour depending on your use case flow.
+> This same configurations can be ported in any of our ms in the lodging platform without break any of the current flows.
+
 
 ## Usage
 ### Make Targets
@@ -26,6 +27,16 @@ bin/console messenger:consume {transport} --time-limit={s} --memory-limit={mb} -
 bin/console list messenger # show all the commands available under the messenger component in the slim app
 ```
 > For more details about the commands you can check the [symfony messenger documentation](https://symfony.com/doc/current/messenger.html)
+
+## Usage
+The application comes with one Query and two Commands to be used as an example (one of the commands is sent using the async bus). To be able to use them you can use the following endpoints:
+
+```sh
+make start # to start the app
+for i in {1..10}; do curl -X GET http://0.0.0.0:8080/cqrs; done # to execute the use case with the query and commands
+make follow-logs # to see the logs (you'll se sync query and command already handled)
+make run CMD="bin/console messenger:consume --bus=async.command.bus --time-limit=60" # to consume the async messages
+```
 
 ## Notes
 - `src/Infrastructure/Provider/Messenger`: This folder holds all the classes used to configure the component inside the SLIM app.
