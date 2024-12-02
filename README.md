@@ -29,13 +29,13 @@ bin/console list messenger # show all the commands available under the messenger
 > For more details about the commands you can check the [symfony messenger documentation](https://symfony.com/doc/current/messenger.html)
 
 ## Usage
-The application comes with one Query and two Commands to be used as an example (one of the commands is sent using the async bus). To be able to use them you can use the following endpoints:
+The application comes with one Query and two Commands to be used as an example (one of the commands is sent using the async bus), you can test the use case with the following steps:
 
 ```sh
 make start # to start the app
 for i in {1..10}; do curl -X GET http://0.0.0.0:8080/cqrs; done # to execute the use case with the query and commands
-make follow-logs # to see the logs (you'll se sync query and command already handled)
-make run CMD="bin/console messenger:consume --bus=async.command.bus --time-limit=60" # to consume the async messages
+make follow-logs # to see the logs (you'll see that ONLY the sync query and command has been handled)
+make run CMD="bin/console messenger:consume --bus=async.command.bus --time-limit=60" # to consume the async messages from rabbitmq
 ```
 
 ## Notes
