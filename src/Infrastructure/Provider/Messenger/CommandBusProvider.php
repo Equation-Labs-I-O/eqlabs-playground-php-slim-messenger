@@ -8,10 +8,14 @@ use App\Application\Command\ConfirmReservationCommand;
 use App\Application\Command\ConfirmReservationHandler;
 use App\Application\Command\CreatePendingReservationCommand;
 use App\Application\Command\CreatePendingReservationHandler;
+use App\Application\Command\RetryAndFailCommand;
+use App\Application\Command\RetryAndFailHandler;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\Middleware\FailedMessageProcessingMiddleware;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
@@ -30,6 +34,7 @@ final readonly class CommandBusProvider
                 $sendersLocator = new SendersLocator(...$container->get(TransportsProviders::ASYNC_SENDER_LOCATOR_CONFIGURATION));
 
                 return new MessageBus([
+                    new FailedMessageProcessingMiddleware(),
                     new SendMessageMiddleware($sendersLocator),
                     new HandleMessageMiddleware($handlersLocator),
                 ]);
@@ -43,8 +48,15 @@ final readonly class CommandBusProvider
             },
             self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
-                    CreatePendingReservationCommand::class => [$container->get(CreatePendingReservationHandler::class)],
-                    ConfirmReservationCommand::class => [$container->get(ConfirmReservationHandler::class)],
+                    CreatePendingReservationCommand::class => [
+                        new CreatePendingReservationHandler($container->get(LoggerInterface::class))
+                    ],
+                    ConfirmReservationCommand::class => [
+                        new ConfirmReservationHandler($container->get(LoggerInterface::class))
+                    ],
+                    RetryAndFailCommand::class => [
+                        new RetryAndFailHandler()
+                    ],
                 ];
             },
         ]);

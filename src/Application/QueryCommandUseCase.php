@@ -6,6 +6,7 @@ namespace App\Application;
 
 use App\Application\Command\ConfirmReservationCommand;
 use App\Application\Command\CreatePendingReservationCommand;
+use App\Application\Command\RetryAndFailCommand;
 use App\Application\Query\GetReservationByIdQuery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -26,10 +27,11 @@ final readonly class QueryCommandUseCase
      */
     public function execute(string $id): void
     {
-        // sync bus (query bus is always sync)
+        // sync bus
         $this->queryBus->dispatch(new GetReservationByIdQuery($id));
         // async bus
         $this->asyncCommandBus->dispatch(new CreatePendingReservationCommand($id));
+        $this->asyncCommandBus->dispatch(new RetryAndFailCommand($id));
         // sync bus
         $this->commandBus->dispatch(new ConfirmReservationCommand($id));
 

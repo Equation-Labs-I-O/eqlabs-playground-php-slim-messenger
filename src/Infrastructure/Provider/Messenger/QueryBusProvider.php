@@ -7,6 +7,7 @@ use App\Application\Query\GetReservationByIdHandler;
 use App\Application\Query\GetReservationByIdQuery;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
@@ -20,8 +21,7 @@ final readonly class QueryBusProvider
     {
         $containerBuilder->addDefinitions([
             self::SYNC => function (ContainerInterface $container) {
-                $handlers = $container->get(self::HANDLERS_MAP);
-                $handlersLocator = new HandlersLocator($handlers);
+                $handlersLocator = new HandlersLocator($container->get(self::HANDLERS_MAP));
 
                 return new MessageBus([
                     new HandleMessageMiddleware($handlersLocator),
@@ -29,7 +29,9 @@ final readonly class QueryBusProvider
             },
             self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
-                    GetReservationByIdQuery::class => [$container->get(GetReservationByIdHandler::class)],
+                    GetReservationByIdQuery::class => [
+                        new GetReservationByIdHandler($container->get(LoggerInterface::class))
+                    ],
                 ];
             },
         ]);
