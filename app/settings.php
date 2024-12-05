@@ -26,7 +26,7 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 'messenger' => [
                     'transports' => [
-                        'async_transport' => [
+                        'async' => [
                             'dsn' => getenv('RABBITMQ_TRANSPORT_DSN'),
                             'options' => [
                                 'exchange' => [
@@ -39,16 +39,17 @@ return function (ContainerBuilder $containerBuilder) {
                                 ],
                             ],
                             'retry_strategy' => [
-                                'max_retries' => 3,
+                                'max_retries' => 30,
                                 'delay' => 1000,
-                                'multiplier' => 2,
+                                'multiplier' => 5,
                                 'max_delay' => 0,
                             ]
                         ],
-                        'async_failure_transport' => [
+                        'async_failure' => [
                             'dsn' => 'doctrine://default',
                             'options' => [
                                 'table_name' => 'async_commands_failed_messages',
+                                'queue_name' => 'async.commands.failure',
                             ],
                         ]
                     ],

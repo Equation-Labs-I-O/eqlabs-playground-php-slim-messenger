@@ -12,13 +12,13 @@ use Symfony\Component\Messenger\Retry\RetryStrategyInterface;
 
 final readonly class RetryStrategyProvider
 {
-    public const MULTIPLIER = 'messenger.commands.retry.strategy';
+    public const FOR_ASYNC_TRANSPORT = 'messenger.commands.retry.strategy';
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
-            self::MULTIPLIER => function (ContainerInterface $container): RetryStrategyInterface {
+            self::FOR_ASYNC_TRANSPORT => function (ContainerInterface $container): RetryStrategyInterface {
                 $settings = $container->get(SettingsInterface::class);
-                $messengerRetrySettings = $settings->get('messenger')['retry_strategy'];
+                $messengerRetrySettings = $settings->get('messenger')['transports']['async']['retry_strategy'];
 
                 return new MultiplierRetryStrategy(
                     $messengerRetrySettings['max_retries'],

@@ -17,26 +17,27 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection as Doctrine
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
+use Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 final readonly class TransportsProviders
 {
-    public const ASYNC_SENDER_LOCATOR_CONFIGURATION = 'messenger.sender.locator.configuration';
-    public const ASYNC_FAILURE_TRANSPORT = 'messenger.async.failure.transport';
-    public const ASYNC_TRANSPORT = 'messenger.async.transport';
+    public const ASYNC_FAILURE_TRANSPORT = 'messenger.transport.failure';
+    public const ASYNC_TRANSPORT = 'messenger.transport.async';
+    public const ASYNC_SENDERS_MAP = 'messenger.senders.map.configuration';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
-            self::ASYNC_SENDER_LOCATOR_CONFIGURATION => function (ContainerInterface $container): array {
+            self::ASYNC_SENDERS_MAP => function (ContainerInterface $container): array {
                 return [
                    [ '*' =>  [ self::ASYNC_TRANSPORT ]],
-                    $container
+                   $container
                 ];
             },
             self::ASYNC_TRANSPORT => function (ContainerInterface $container): TransportInterface {
                 $settings = $container->get(SettingsInterface::class);
-                $amqpSettings = $settings->get('messenger')['transports']['async_transport'];
+                $amqpSettings = $settings->get('messenger')['transports']['async'];
 
                 return new AmqpTransport(
                     Connection::fromDsn($amqpSettings['dsn'], $amqpSettings['options']),
@@ -45,13 +46,13 @@ final readonly class TransportsProviders
             },
             self::ASYNC_FAILURE_TRANSPORT => function (ContainerInterface $container): TransportInterface {
                 $settings = $container->get(SettingsInterface::class);
-                $doctrineSettings = $settings->get('messenger')['transports']['async_failure_transport'];
+                $doctrineSettings = $settings->get('messenger')['transports']['async_failure'];
 
                 return new DoctrineTransport(
                     new DoctrineConnection($doctrineSettings['options'], $container->get(DatabaseProvider::MAIN_CONNECTION)),
                     new PhpSerializer()
                 );
-            }
+            },
         ]);
     }
 }

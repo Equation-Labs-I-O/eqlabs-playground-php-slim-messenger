@@ -29,9 +29,7 @@ final readonly class QueryBusProvider
             },
             self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
-                    GetReservationByIdQuery::class => [
-                        new GetReservationByIdHandler($container->get(LoggerInterface::class))
-                    ],
+                    GetReservationByIdQuery::class => [new GetReservationByIdHandler($container->get(LoggerInterface::class))],
                 ];
             },
         ]);
