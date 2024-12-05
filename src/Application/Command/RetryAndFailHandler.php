@@ -9,17 +9,19 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class RetryAndFailHandler
+final readonly class RetryAndFailHandler
 {
-    private int $timesCalled = 0;
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
 
     /**
      * @throws Exception
      */
     public function __invoke(RetryAndFailCommand $command): void
     {
-        ++$this->timesCalled;
-
-        throw new Exception('This command failed ' . $this->timesCalled . ' times');
+        $this->logger->info('This command will fail and be retried, until it reaches the max retries, then it will be moved to the failure transport (database)');
+        sleep(1);
+        throw new Exception('This command failed ');
     }
 }

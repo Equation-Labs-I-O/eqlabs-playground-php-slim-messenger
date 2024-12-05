@@ -17,6 +17,7 @@ use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\FailedMessageProcessingMiddleware;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
+use Symfony\Component\Messenger\Middleware\RejectRedeliveredMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 
@@ -31,12 +32,13 @@ final readonly class CommandBusProvider
         $containerBuilder->addDefinitions([
             self::ASYNC => function (ContainerInterface $container) {
                 $handlersLocator = new HandlersLocator($container->get(self::HANDLERS_MAP));
-                $sendersLocator = new SendersLocator(...$container->get(TransportsProviders::ASYNC_SENDER_LOCATOR_CONFIGURATION));
+                $sendersLocator = new SendersLocator(...$container->get(TransportsProviders::ASYNC_SENDERS_MAP));
 
                 return new MessageBus([
-                    new FailedMessageProcessingMiddleware(),
                     new SendMessageMiddleware($sendersLocator),
                     new HandleMessageMiddleware($handlersLocator),
+                    new FailedMessageProcessingMiddleware(),
+                    new RejectRedeliveredMessageMiddleware(),
                 ]);
             },
             self::SYNC => function (ContainerInterface $container) {
@@ -48,15 +50,9 @@ final readonly class CommandBusProvider
             },
             self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
-                    CreatePendingReservationCommand::class => [
-                        new CreatePendingReservationHandler($container->get(LoggerInterface::class))
-                    ],
-                    ConfirmReservationCommand::class => [
-                        new ConfirmReservationHandler($container->get(LoggerInterface::class))
-                    ],
-                    RetryAndFailCommand::class => [
-                        new RetryAndFailHandler()
-                    ],
+                    CreatePendingReservationCommand::class => [new CreatePendingReservationHandler($container->get(LoggerInterface::class))],
+                    ConfirmReservationCommand::class => [new ConfirmReservationHandler($container->get(LoggerInterface::class))],
+                    RetryAndFailCommand::class => [new RetryAndFailHandler($container->get(LoggerInterface::class))],
                 ];
             },
         ]);

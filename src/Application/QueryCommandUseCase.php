@@ -27,12 +27,12 @@ final readonly class QueryCommandUseCase
      */
     public function execute(string $id): void
     {
-        // sync bus
+        // sync query bus
         $this->queryBus->dispatch(new GetReservationByIdQuery($id));
-        // async bus
+        // async command bus
         $this->asyncCommandBus->dispatch(new CreatePendingReservationCommand($id));
         $this->asyncCommandBus->dispatch(new RetryAndFailCommand($id));
-        // sync bus
+        // sync command bus
         $this->commandBus->dispatch(new ConfirmReservationCommand($id));
 
         $this->logger->info('Use case has been executed successfully!');
