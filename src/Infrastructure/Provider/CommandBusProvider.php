@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Provider\Messenger;
+namespace App\Infrastructure\Provider;
 
 use App\Application\Command\ConfirmReservationCommand;
 use App\Application\Command\ConfirmReservationHandler;
@@ -10,6 +10,7 @@ use App\Application\Command\CreatePendingReservationCommand;
 use App\Application\Command\CreatePendingReservationHandler;
 use App\Application\Command\RetryAndFailCommand;
 use App\Application\Command\RetryAndFailHandler;
+use App\Infrastructure\Provider\Messenger\TransportsProviders;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -52,7 +53,7 @@ final readonly class CommandBusProvider
                 return [
                     CreatePendingReservationCommand::class => [new CreatePendingReservationHandler($container->get(LoggerInterface::class))],
                     ConfirmReservationCommand::class => [new ConfirmReservationHandler($container->get(LoggerInterface::class))],
-                    RetryAndFailCommand::class => [new RetryAndFailHandler($container->get(LoggerInterface::class))],
+                    RetryAndFailCommand::class => [new RetryAndFailHandler()],
                 ];
             },
         ]);

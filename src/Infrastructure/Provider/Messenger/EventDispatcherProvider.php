@@ -31,13 +31,13 @@ final readonly class EventDispatcherProvider
             'messenger.event.listeners' => function (ContainerInterface $container) {
                 return [
                     new AddErrorDetailsStampListener(),
-//                    new SendFailedMessageForRetryListener(
-//                        $container->get(ServicesProvider::ASYNC_TRANSPORTS_SERVICE_PROVIDER),
-//                        $container->get(ServicesProvider::RETRY_STRATEGY_SERVICE_PROVIDER),
-//                        $container->get(LoggerInterface::class)
-//                    ),
+                    new SendFailedMessageForRetryListener(
+                        $container->get(ServicesProvider::MESSENGER_TRANSPORTS_SERVICE_PROVIDER),
+                        $container->get(ServicesProvider::MESSENGER_RETRY_SERVICE_PROVIDER),
+                        $container->get(LoggerInterface::class)
+                    ),
                     new SendFailedMessageToFailureTransportListener(
-                        $container->get(ServicesProvider::FAILURE_TRANSPORTS_SERVICE_PROVIDER),
+                        $container->get(ServicesProvider::MESSENGER_FAILURE_TRANSPORTS_SERVICE_PROVIDER),
                         $container->get(LoggerInterface::class)
                     )
                 ];

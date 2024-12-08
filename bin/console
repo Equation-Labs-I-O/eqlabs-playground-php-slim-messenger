@@ -9,6 +9,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
 
 if ('cli' !== PHP_SAPI) {
@@ -41,6 +42,7 @@ try {
             ConsumeMessagesCommand::getDefaultName() => ConsumeMessagesCommand::class,
             FailedMessagesShowCommand::getDefaultName() => FailedMessagesShowCommand::class,
             FailedMessagesRemoveCommand::getDefaultName() => FailedMessagesRemoveCommand::class,
+            FailedMessagesRetryCommand::getDefaultName() => FailedMessagesRetryCommand::class,
         ]
     );
 

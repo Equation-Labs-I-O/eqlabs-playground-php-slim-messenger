@@ -8,16 +8,11 @@ use App\Infrastructure\Provider\DatabaseProvider;
 use App\Infrastructure\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpReceiver;
-use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpSender;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransport;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection as DoctrineConnection;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
-use Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 final readonly class TransportsProviders

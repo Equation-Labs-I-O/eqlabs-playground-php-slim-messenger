@@ -13,9 +13,6 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => true,
-                'logErrorDetails'     => true,
                 'logger' => [
                     'name' => getenv('PROJECT_NAME'),
                     'path' => 'php://stdout',
@@ -31,15 +28,22 @@ return function (ContainerBuilder $containerBuilder) {
                             'options' => [
                                 'exchange' => [
                                     'name' => 'commands.exchange',
+                                    'default_publish_routing_key' => 'async.commands',
+                                    'type' => 'direct',
                                 ],
                                 'queues' => [
                                     'commands.queue' => [
                                         'binding_keys' => [ 'async.commands' ],
                                     ],
                                 ],
+                                'delay' => [
+                                    'exchange_name' => 'commands.retry.exchange',
+                                    // you will have as many retry queues as the max_retries value dynamically created/deleted by the workers
+                                    'queue_name_pattern' => 'commands.retry.queue.%delay%',
+                                ]
                             ],
                             'retry_strategy' => [
-                                'max_retries' => 30,
+                                'max_retries' => 3,
                                 'delay' => 1000,
                                 'multiplier' => 5,
                                 'max_delay' => 0,
@@ -48,12 +52,14 @@ return function (ContainerBuilder $containerBuilder) {
                         'async_failure' => [
                             'dsn' => 'doctrine://default',
                             'options' => [
-                                'table_name' => 'async_commands_failed_messages',
-                                'queue_name' => 'async.commands.failure',
+                                'table_name' => 'commands_failed_messages',
                             ],
                         ]
                     ],
                 ],
+                'displayErrorDetails' => true, // Should be set to false in production
+                'logError'            => true,
+                'logErrorDetails'     => true
             ]);
         }
     ]);

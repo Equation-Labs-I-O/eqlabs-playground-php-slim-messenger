@@ -4,8 +4,6 @@ This is a simple example of how to use `slim` and `symfony/messenger` together t
 
 A `command`, `query` or `event`, can be dispatched to any bus (`sync` and `async`) so you can decide the behaviour depending on your use case flow.
 
-> This same configurations can be ported in any of our ms in the lodging platform without break any of the current flows.
-
 
 ## Usage
 ### Make Targets
@@ -34,9 +32,10 @@ The application comes with one Query and two Commands to be used as an example (
 make start # to start the app
 for i in {1..10}; do curl -X GET http://0.0.0.0:8080/cqrs; done # to execute the use case with the query and commands
 make follow-logs # to see the logs (you'll see that ONLY the sync query and command has been handled)
-make run CMD="bin/console messenger:consume -vv --bus=async.command.bus --time-limit=60" # to consume the async messages from rabbitmq
-make run CMD="bin/console messenger:failed:show -vv" # to see the failed messages in the database storage
-make run CMD="bin/console messenger:failed:retry -vv" # to retry a failed message
+make run CMD="bin/console messenger:consume --bus={name} --time-limit=60 -vv" # to consume the async messages from rabbitmq
+make run CMD="bin/console messenger:failed:show --transport={name} -vv" # to see the failed messages in the database storage
+make run CMD="bin/console messenger:failed:retry --transport={name} -vv" # to retry a failed (re send to rabbitmq queue)
+make run CMD="bin/console messenger:failed:remove --transport={name} -vv" # to remove a failed message from the storage
 ```
 
 ## Notes

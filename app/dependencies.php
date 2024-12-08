@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Provider\CommandBusProvider;
 use App\Infrastructure\Provider\ControllersProvider;
 use App\Infrastructure\Provider\DatabaseProvider;
 use App\Infrastructure\Provider\LoggerProvider;
-use App\Infrastructure\Provider\Messenger\CommandBusProvider;
 use App\Infrastructure\Provider\Messenger\ConsoleCommandsProvider;
 use App\Infrastructure\Provider\Messenger\EventDispatcherProvider;
-use App\Infrastructure\Provider\Messenger\QueryBusProvider;
 use App\Infrastructure\Provider\Messenger\RetryStrategyProvider;
 use App\Infrastructure\Provider\Messenger\ServicesProvider;
 use App\Infrastructure\Provider\Messenger\TransportsProviders;
+use App\Infrastructure\Provider\QueryBusProvider;
 use DI\ContainerBuilder;
 
 return function (ContainerBuilder $containerBuilder) {

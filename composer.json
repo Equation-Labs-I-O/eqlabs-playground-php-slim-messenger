@@ -1,24 +1,20 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
+    "name": "oc/slim-symfony-messenger-sandbox",
+    "description": "A Slim Framework with a full implementation of Symfony Messenger",
     "keywords": [
         "microframework",
-        "rest",
-        "router",
+        "cqrs",
+        "symfony",
+        "messenger",
+        "rabbitmq",
         "psr7"
     ],
-    "homepage": "http://github.com/slimphp/Slim-Skeleton",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
-        },
-        {
-            "name": "Pierre Berube",
-            "email": "pierre@lgse.com",
-            "homepage": "http://www.lgse.com/"
+            "name": "Raul Castellanos",
+            "email": "raul.castellanos@edreamsodigeo.com",
+            "homepage": "https://www.odigeoconnect.com/"
         }
     ],
     "require": {

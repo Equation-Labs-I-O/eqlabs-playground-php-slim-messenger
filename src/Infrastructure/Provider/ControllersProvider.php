@@ -6,8 +6,6 @@ namespace App\Infrastructure\Provider;
 
 use App\Application\QueryCommandUseCase;
 use App\Infrastructure\Controller\CommandQueryController;
-use App\Infrastructure\Provider\Messenger\CommandBusProvider;
-use App\Infrastructure\Provider\Messenger\QueryBusProvider;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;

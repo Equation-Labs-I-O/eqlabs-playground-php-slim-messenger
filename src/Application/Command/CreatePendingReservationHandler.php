@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Command;
 
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,7 +22,7 @@ final readonly class CreatePendingReservationHandler
         $this->logger->info(
             sprintf(
                 'This command was handled with an ASYNC bus at %s',
-                (new \DateTime())->format('Y-m-d H:i:s')
+                (new DateTime())->format('Y-m-d H:i:s')
             )
         );
     }

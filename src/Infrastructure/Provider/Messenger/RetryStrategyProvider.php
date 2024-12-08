@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Retry\RetryStrategyInterface;
 
 final readonly class RetryStrategyProvider
 {
-    public const FOR_ASYNC_TRANSPORT = 'messenger.commands.retry.strategy';
+    public const FOR_ASYNC_TRANSPORT = 'messenger.transport.async.retry.strategy';
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([

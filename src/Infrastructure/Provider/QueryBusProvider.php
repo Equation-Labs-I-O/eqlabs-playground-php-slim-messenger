@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Infrastructure\Provider\Messenger;
+namespace App\Infrastructure\Provider;
 
 use App\Application\Query\GetReservationByIdHandler;
 use App\Application\Query\GetReservationByIdQuery;
