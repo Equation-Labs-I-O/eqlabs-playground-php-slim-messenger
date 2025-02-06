@@ -40,7 +40,8 @@ return function (ContainerBuilder $containerBuilder) {
                                     'exchange_name' => 'commands.retry.exchange',
                                     // you will have as many retry queues as the max_retries value dynamically created/deleted by the workers
                                     'queue_name_pattern' => 'commands.retry.queue.%delay%',
-                                ]
+                                ],
+                                'cacert' => getenv('RABBITMQ_CACERT_FILE'),
                             ],
                             'retry_strategy' => [
                                 'max_retries' => 3,

@@ -12,6 +12,7 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
+      - ./docker/certs:/usr/local/share/ca-certificates
     depends_on:
       rabbitmq : { condition: service_healthy }
       mysql : { condition: service_healthy }
@@ -26,6 +27,9 @@ services:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=slim.messenger
+    volumes:
+      - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./docker/certs:/opt/certs
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 2s
