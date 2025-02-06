@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTranspor
 
 final readonly class EventDispatcherProvider
 {
-    public const FOR_ASYNC_TRANSPORT = 'messenger.event.dispatcher';
+    public const MESSENGER_EVENT_DISPATCHER = 'messenger.event.dispatcher';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
-            self::FOR_ASYNC_TRANSPORT => function (ContainerInterface $container) {
+            self::MESSENGER_EVENT_DISPATCHER => function (ContainerInterface $container) {
                 $dispatcher = new EventDispatcher();
 
                 foreach ($container->get('messenger.event.listeners') as $subscriber) {

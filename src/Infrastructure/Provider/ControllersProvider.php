@@ -24,9 +24,8 @@ final readonly class ControllersProvider
                 QueryCommandUseCase::class => function (ContainerInterface $container) {
                     return new QueryCommandUseCase(
                         $container->get(LoggerInterface::class),
-                        $container->get(CommandBusProvider::ASYNC),
-                        $container->get(CommandBusProvider::SYNC),
-                        $container->get(QueryBusProvider::SYNC),
+                        $container->get(CommandBusProvider::COMMAND_BUS),
+                        $container->get(QueryBusProvider::QUERY_BUS),
                     );
                 },
             ]

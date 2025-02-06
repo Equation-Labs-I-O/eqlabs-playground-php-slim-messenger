@@ -10,6 +10,7 @@ use App\Application\Command\CreatePendingReservationCommand;
 use App\Application\Command\CreatePendingReservationHandler;
 use App\Application\Command\RetryAndFailCommand;
 use App\Application\Command\RetryAndFailHandler;
+use App\Infrastructure\Provider\Bus\CommandBus;
 use App\Infrastructure\Provider\Messenger\TransportsProviders;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
@@ -24,36 +25,29 @@ use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 
 final readonly class CommandBusProvider
 {
-    public const ASYNC = 'async.command.bus';
-    public const SYNC = 'command.bus';
+    public const COMMAND_BUS = 'command.bus';
     public const HANDLERS_MAP = 'command.handlers';
 
     public static function load(ContainerBuilder $containerBuilder): void
     {
         $containerBuilder->addDefinitions([
-            self::ASYNC => function (ContainerInterface $container) {
+            self::COMMAND_BUS => function (ContainerInterface $container): CommandBus {
                 $handlersLocator = new HandlersLocator($container->get(self::HANDLERS_MAP));
-                $sendersLocator = new SendersLocator(...$container->get(TransportsProviders::ASYNC_SENDERS_MAP));
+                $sendersLocator = $container->get(TransportsProviders::MESSENGER_SENDERS_LOCATOR);
 
-                return new MessageBus([
-                    new SendMessageMiddleware($sendersLocator),
-                    new HandleMessageMiddleware($handlersLocator),
+                $messageBus = new MessageBus([
                     new FailedMessageProcessingMiddleware(),
                     new RejectRedeliveredMessageMiddleware(),
-                ]);
-            },
-            self::SYNC => function (ContainerInterface $container) {
-                $handlersLocator = new HandlersLocator($container->get(self::HANDLERS_MAP));
-
-                return new MessageBus([
+                    new SendMessageMiddleware($sendersLocator),
                     new HandleMessageMiddleware($handlersLocator),
                 ]);
+
+                return new CommandBus($messageBus);
             },
             self::HANDLERS_MAP => function (ContainerInterface $container) {
                 return [
                     CreatePendingReservationCommand::class => [new CreatePendingReservationHandler($container->get(LoggerInterface::class))],
                     ConfirmReservationCommand::class => [new ConfirmReservationHandler($container->get(LoggerInterface::class))],
-                    RetryAndFailCommand::class => [new RetryAndFailHandler()],
                 ];
             },
         ]);

@@ -21,21 +21,21 @@ final readonly class ServicesProvider
            self::MESSENGER_TRANSPORTS_SERVICE_PROVIDER => function (ContainerInterface $container): ServiceProviderInterface {
                return new MessengerServiceLocator(
                    [
-                       TransportsProviders::ASYNC_TRANSPORT => fn() => $container->get(TransportsProviders::ASYNC_TRANSPORT)
+                       TransportsProviders::MESSENGER_AMQP_TRANSPORT => fn() => $container->get(TransportsProviders::MESSENGER_AMQP_TRANSPORT)
                    ]
                );
            },
           self::MESSENGER_FAILURE_TRANSPORTS_SERVICE_PROVIDER => function (ContainerInterface $container): ServiceProviderInterface {
             return new MessengerServiceLocator(
                  [
-                     TransportsProviders::ASYNC_TRANSPORT => fn() => $container->get(TransportsProviders::ASYNC_FAILURE_TRANSPORT),
+                     TransportsProviders::MESSENGER_AMQP_TRANSPORT => fn() => $container->get(TransportsProviders::MESSENGER_FAILURE_TRANSPORT),
                  ]
             );
           },
           self::MESSENGER_RETRY_SERVICE_PROVIDER => function (ContainerInterface $container): ServiceProviderInterface {
               return new MessengerServiceLocator(
                   [
-                      TransportsProviders::ASYNC_TRANSPORT => fn() => $container->get(RetryStrategyProvider::FOR_ASYNC_TRANSPORT)
+                      TransportsProviders::MESSENGER_AMQP_TRANSPORT => fn() => $container->get(RetryStrategyProvider::FOR_ASYNC_TRANSPORT)
                   ]
               );
           },
