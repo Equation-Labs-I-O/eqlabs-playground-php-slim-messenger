@@ -8,8 +8,6 @@ use App\Application\Command\ConfirmReservationCommand;
 use App\Application\Command\ConfirmReservationHandler;
 use App\Application\Command\CreatePendingReservationCommand;
 use App\Application\Command\CreatePendingReservationHandler;
-use App\Application\Command\RetryAndFailCommand;
-use App\Application\Command\RetryAndFailHandler;
 use App\Infrastructure\Provider\Bus\CommandBus;
 use App\Infrastructure\Provider\Messenger\TransportsProviders;
 use DI\ContainerBuilder;
