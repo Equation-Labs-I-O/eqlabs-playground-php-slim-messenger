@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Handlers;
 
+use App\Infrastructure\ResponseEmitter\ResponseEmitter;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpInternalServerErrorException;
-use src\Infrastructure\ResponseEmitter\ResponseEmitter;
 
 class ShutdownHandler
 {

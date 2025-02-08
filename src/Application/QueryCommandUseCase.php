@@ -10,7 +10,6 @@ use App\Application\Query\GetReservationByIdQuery;
 use App\Infrastructure\Provider\Bus\CommandBusInterface;
 use App\Infrastructure\Provider\Bus\QueryBusInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
 final readonly class QueryCommandUseCase
 {

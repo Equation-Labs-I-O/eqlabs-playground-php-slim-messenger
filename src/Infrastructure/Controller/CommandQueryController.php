@@ -15,9 +15,6 @@ final readonly class CommandQueryController
     {
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $this->queryCommandUseCase->execute(uniqid());
