@@ -6,6 +6,9 @@ A `command`, `query` or `event`, can be dispatched to any bus (`sync` and `async
 
 
 ## Usage
+
+> You should generate self signed certificates to do your tests accordingly and put those certificates on `docker/certs` folder
+
 ### Make Targets
 To start the project you need to run the following commands:
 

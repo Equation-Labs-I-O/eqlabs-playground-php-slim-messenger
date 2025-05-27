@@ -4,6 +4,7 @@
 /vendor/
 /var/
 /logs/*
+/docker/certs
 !/logs/README.md
 .phpunit.result.cache
 .DS_store
