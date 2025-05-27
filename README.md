@@ -51,40 +51,41 @@ make run CMD="bin/console messenger:failed:remove --transport={name} -vv" # to r
 `sync` bus aka `"Wait and Return"`: The bus will dispatch the message and wait for the response.
 
 
-```plantuml
+```mermaid
 
-participant "Controller" as controller
-participant "UseCase" as use_case
-participant "QueryBus (sync)" as query_bus
-participant "QueryHandler" as query_handler
-participant "CommandBus (async)" as command_bus
-queue "Queue" as queue
-control "consumer" as consumer
-participant "CommandHandler" as command_handler
-database "Database" as db
+sequenceDiagram
+    participant Controller
+    participant UseCase
+    participant QueryBus (sync)
+    participant QueryHandler
+    participant CommandBus (async)
+    participant Queue
+    participant consumer
+    participant CommandHandler
+    participant Database
 
-controller -> use_case: execute()
-use_case -> query_bus: dispatch(Query)
-query_bus -> query_handler: handles(Query)
-query_handler -> use_case: return(QueryResponse)
-use_case -> controller: return(QueryResponse)
-use_case --> command_bus: dispatch(Command)
-activate use_case #lightblue
-command_bus --> queue: push(Command)
-queue <-- consumer: consume(Command)
-consumer --> command_handler: handles(Command)
-alt $onFailure->shouldRetry()
-  consumer --> queue: push(Command)
-  queue <-- consumer: consume(Command)
-  consumer --> command_handler: handles(Command)
-else retries are exhausted
-  consumer --> db: persist(Command)
-end
-deactivate use_case
-note right of controller
-  The execution will finish before the command is handled
-  due the nature of the async transport
-end note
-controller <- use_case: end()
+    Controller->>UseCase: execute()
+    UseCase->>QueryBus: dispatch(Query)
+    QueryBus->>QueryHandler: handles(Query)
+    QueryHandler->>UseCase: return(QueryResponse)
+    UseCase->>Controller: return(QueryResponse)
+    UseCase-->>CommandBus: dispatch(Command)
+    activate UseCase
+    CommandBus-->>Queue: push(Command)
+    Queue-->>consumer: consume(Command)
+    consumer->>CommandHandler: handles(Command)
+
+    alt $onFailure->shouldRetry()
+        consumer-->>Queue: push(Command)
+        Queue-->>consumer: consume(Command)
+        consumer->>CommandHandler: handles(Command)
+    else retries are exhausted
+        consumer->>Database: persist(Command)
+    end
+    deactivate UseCase
+
+    Note right of Controller: The execution will finish before the command is handled<br/>due the nature of the async transport
+
+    Controller-->>UseCase: end()
 
 ```
